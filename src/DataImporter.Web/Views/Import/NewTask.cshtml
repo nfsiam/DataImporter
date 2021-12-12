@@ -1,0 +1,229 @@
+﻿@model DataImporter.Web.Models.Import.NewTaskModel
+@{
+    ViewData["Title"] = "New Import Task";
+}
+
+@section Styles
+{
+<link href="/lib/select2/css/select2.min.css" rel="stylesheet" />
+<link href="/css/bs-stepper.css" rel="stylesheet" />
+<link href="/css/fileuploader.css" rel="stylesheet" />
+}
+
+
+<div class="row mb-0 d-flex justify-content-between h-100 align-items-center">
+    <div class="col-sm-6">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right px-0">
+            <li class="breadcrumb-item">
+                <a href="/">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Import Now</li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row mb-0" id="placeholder">
+    <div class="col-md-12">
+        <div class="card pb-0 pt-2">
+            <div class="spin-div overlay"></div>
+            <div class="card-body pb-3">
+                <!--Stepper-->
+                <div class="bs-stepper mb-5">
+                    <div class="bs-stepper-header" role="tablist">
+                        <div class="step active" data-target="#test-l-1">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Upload File</span>
+                        </div>
+                        <div class="bs-stepper-line"></div>
+                        <div class="step" data-target="#test-l-1">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Preview File</span>
+                        </div>
+                        <div class="bs-stepper-line"></div>
+                        <div class="step" data-target="#test-l-1">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">Conclusion</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Stepper-->
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger text-left pb-0 validation-block">
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex align-items-center justify-content-center">
+
+                    <div class="col-md-8">
+                        <div class="form-group row mb-3 d-flex align-items-center">
+                            <div class="col">
+                                <select class="js-example-basic-single form-control" id="groupSelect"></select>
+                            </div>
+                        </div>
+                        <input type="file" name="ExcelFile" id="choose">
+                        <div class="card rounded p-4 border drag-zone">
+                            <label class="inner-drag-zone text-center dashed-nofocus mouse-pointer mb-0" for="choose">
+                                <h4 class="f-w-700 text-nofocus mb-0" id="dialog">
+                                    Click to
+                                    Select
+                                    File or Drag & Drop
+                                </h4>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" asp-controller="Import" class="btn btn-secondary text-white shadow-3">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn shadow-3 btn-info mx-0">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+<script src="/lib/select2/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script>
+    const dragObj = {
+        dragZone: $('.drag-zone'),
+        innerDragZone: $('.inner-drag-zone'),
+        dialog: $('#dialog'),
+        choose: $('#choose'),
+        formData: null,
+        setFocus: function () {
+            this.dragZone.addClass('theme-bg2');
+            this.innerDragZone.addClass("dashed-focus");
+            this.dialog.addClass('text-focus');
+        },
+        resetFocus: function () {
+            this.dragZone.removeClass('theme-bg2');
+            this.innerDragZone.removeClass("dashed-focus");
+            this.dialog.removeClass('text-focus');
+        },
+        nullifyFile: function () {
+            this.formData = null;
+            this.choose[0].value = null;
+            this.dialog.text("Click to Select File or Drag & Drop");
+        },
+        attachFile: function (file) {
+            if (file !== null) {
+                this.dialog.text(file.name);
+                if (this.formData === null) {
+                    this.formData = new FormData();
+                }
+                this.formData.append('ExcelFile', file);
+            }
+        }
+    };
+
+    dragObj.choose.click(function () {
+        dragObj.nullifyFile();
+    });
+
+    dragObj.choose.change(function (e) {
+        dragObj.attachFile(dragObj.choose[0].files[0]);
+    });
+
+    dragObj.innerDragZone.on('dragover',
+        function () {
+            dragObj.setFocus();
+            return false;
+        });
+    dragObj.innerDragZone.on('dragleave',
+        function () {
+            dragObj.resetFocus();
+            return false;
+        });
+    dragObj.innerDragZone.on('drop',
+        function (e) {
+            e.preventDefault();
+            dragObj.nullifyFile();
+            dragObj.attachFile(e.originalEvent.dataTransfer.files[0]);
+            dragObj.resetFocus();
+        });
+
+    function attachFields() {
+        if (dragObj.formData === null) {
+            dragObj.formData = new FormData();
+        }
+        const groupId = $('#groupSelect').val();
+        if (groupId !== null) {
+            dragObj.formData.append('GroupId', $('#groupSelect').val());
+        }
+    }
+
+    $('button[type="submit"').click(function (e) {
+        $('.validation-block').removeClass('visible');
+        attachFields();
+        e.preventDefault();
+        $.ajax({
+            beforeSend: function () { $(".spin-div").addClass("dblock"); },
+            complete: function () { $(".spin-div").removeClass("dblock"); },
+            url: '/import/new-task',
+            data: dragObj.formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            success: function (data) {
+                $('#placeholder').html(data);
+                dragObj.nullifyFile();
+            },
+            error: function (error) {
+                if (error?.responseText?.length > 0) {
+                    $('.validation-block').addClass('visible');
+                    $('.validation-block').html(error.responseText);
+                }
+                dragObj.nullifyFile();
+            }
+        });
+    });
+</script>
+<script>
+    function submitDecision(decision, importId) {
+        const formData = new FormData();
+        formData.append("decision", decision);
+        formData.append("id", importId);
+
+        $.ajax({
+            beforeSend: function () { $(".spin-div").addClass("dblock"); },
+            complete: function () { $(".spin-div").removeClass("dblock"); },
+            url: '/import/finalize-task',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            success: function (data) {
+                $('#placeholder').html(data);
+            },
+            error: function (error) {
+                alert('Something went wrong');
+            }
+        });
+    }
+    $('#placeholder').on('click',
+        '#cancel-task-btn',
+        function () {
+            submitDecision('cancel', $(this).data('import-id'));
+        });
+
+    $('#placeholder').on('click',
+        '#confirm-task-btn',
+        function () {
+            submitDecision('confirm', $(this).data('import-id'));
+        });
+</script>
+}

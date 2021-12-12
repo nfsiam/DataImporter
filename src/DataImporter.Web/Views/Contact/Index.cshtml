@@ -1,0 +1,160 @@
+﻿@{
+    ViewData["Title"] = "All Contacts";
+}
+
+@section Styles
+{
+<link rel="stylesheet" href="/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="/lib/daterangepicker/daterangepicker.min.css">
+<link href="/lib/select2/css/select2.min.css" rel="stylesheet" />
+}
+
+@section Scripts
+{
+<!-- Datepicker Js -->
+<script src="/lib/daterangepicker/moment.min.js"></script>
+<script src="/lib/daterangepicker/daterangepicker.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="/template/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/template/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/template/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Select2 -->
+<script src="/lib/select2/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+
+<script src="/js/dtable-filter.js"></script>
+
+<script>
+    let dTable = null;
+    $('#groupSelect').on("select2:select select2:clear", function (e) {
+        dTable = null;
+        $('#table-container').html('<table id="contacts" class="table table-sm "></table>');
+        const groupId = e.params.data.id;
+        if (groupId === undefined) {
+            $('#table-container').html('Please Select One Group');
+            return;
+        }
+        $.ajax({
+            url: "/Contact/GetContactColumns/",
+            method: 'POST',
+            data: {
+                groupId: groupId
+            },
+            success: function (d) {
+                if (d != null && d.length > 2) {
+                    dTable = $('#contacts').DataTable({
+                        ...dTableCommonConfig,
+                        dom: "<'row'<'col-md-6'l><'col-md-6'p>><r><t><'row'<'col-md-6'i><'col-md-6'p>>",
+                        destroy: true,
+                        columns: d,
+                        order: [[1, "desc"]],
+                        columnDefs:
+                            [
+
+                                { width: "60px", "targets": -1 },
+                                {
+                                    targets: 0,
+                                    orderable: false
+                                },
+                                {
+                                    orderable: false,
+                                    targets: -1,
+                                    render: function (data, type, row) {
+                                        return `
+                                        <button type="submit" class="btn btn-icon btn-light shadow-1 btn-sm" onclick="window.location.href = '/contact/edit/${data}'" value='${data}'
+                                            data-toggle="tooltip" data-placement="top" title="edit this Row">
+                                            <i class="fas fa-pencil-alt text-info"></i>
+                                        </button>
+                                        <button type="submit" class="btn btn-icon btn-light shadow-1 btn-sm show-bs-modal wid" href="#" data-id='${data}' value='${data}'
+                                            data-toggle="tooltip" data-placement="top" title="delete this Row">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </button>
+                                    </div>`;
+                                    }
+                                }
+                            ],
+                        ajax: {
+                            url: "/Contact/GetContactData/",
+                            method: 'POST',
+                            data: (d) => {
+                                d.fStartDate = fStartDate;
+                                d.fEndDate = fEndDate;
+                                d.groupId = groupId
+                            }
+                        },
+                    });
+                } else {
+                    $('#table-container').html('No contact exists for this table. Import here?');
+                }
+            }
+        });
+    });
+
+    $('#table-container').on('click',
+        '.show-bs-modal',
+        function (event) {
+            var id = $(this).data("id");
+            var modal = $("#modal-default");
+            modal.find('.modal-body p').text('Are you sure you want to delete this contact?')
+            $("#deleteId").val(id);
+            $("#deleteForm").attr("action", "/contact/delete");
+            modal.modal('show');
+        });
+
+    $("#deleteButton").click(function () {
+        $("#deleteForm").submit();
+    });
+
+</script>
+}
+
+<div class="row mb-0 d-flex justify-content-between h-100 align-items-center">
+    <div class="col-sm-6">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right px-0">
+            <li class="breadcrumb-item">
+                <a href="/">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">View All Contacts</li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row mb-0">
+    <div class="col-12">
+        <div class="card">
+            <div class="d-flex card-body justify-content-between align-items-end flex-wrap border-bottom pt-3 pb-3">
+                <div class="col-md-9 px-0">
+                    <div class="row px-0 d-flex align-items-end">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div>
+                                    <label for="groupSelect" class="col-form-label">Group</label>
+                                </div>
+                                <select class="js-example-basic-single form-control form-control-sm"
+                                    id="groupSelect"></select>
+                            </div>
+                        </div>
+                        <partial name="_DateFilterPartial" />
+                    </div>
+                </div>
+                <partial name="_SearchInputDataTablesPartial" />
+            </div>
+            <div class="card-body" id="table-container">
+                <table id="contacts" class="table table-sm ">
+                </table>
+            </div>
+            <partial name="_DeletePopupPartial" />
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->

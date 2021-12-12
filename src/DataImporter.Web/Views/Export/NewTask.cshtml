@@ -1,0 +1,98 @@
+﻿@model DataImporter.Web.Models.Export.NewTaskModel
+
+@{
+    ViewData["Title"] = "New Export Task";
+}
+
+@section Styles
+{
+<link href="/lib/select2/css/select2.min.css" rel="stylesheet" />
+}
+
+
+<div class="row mb-0 d-flex justify-content-between h-100 align-items-center">
+    <div class="col-sm-6">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right px-0">
+            <li class="breadcrumb-item">
+                <a href="/">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Export Now</li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row mb-0" id="placeholder">
+    <div class="col-md-12">
+        <div class="card pb-0 pt-2">
+            <div class="spin-div overlay"></div>
+            <div class="card-body pb-5">
+                @if (ViewBag.Success != null)
+                {
+                    <div class="theme-bg2 text-center py-5 rounded">
+                        <h3 class="text-white">Task has been confirmed!</h3>
+                        <a asp-action="Index" asp-controller="Export" class="text-white">
+                            View Status
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger text-left pb-0" role="alert"></div>
+                    }
+                    <form class="form-horizontal" method="post" asp-controller="Export" asp-action="NewTask"
+                    asp-antiforgery="true">
+                        <div class="form-group row">
+                            <label for="groupSelect" class="col-sm-3 col-form-label">Groups</label>
+                            <div class="col-sm-9">
+                                <select class="js-example-basic-multiple form-control form-control-sm" asp-for="Groups"
+                                multiple="multiple" id="groupSelect"></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="DisplayFileName" class="col-sm-3 col-form-label">File Name</label>
+                            <div class="col-sm-9">
+                                <input asp-for="DisplayFileName" class="form-control form-control-sm">
+                                <small class="form-text text-muted">This is Optional. If this field is blank the system will
+                                    generate a name from the selected groups with current date and time</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Email" class="col-sm-3 col-form-label">Receiver's Email</label>
+                            <div class="col-sm-9">
+                                <input asp-for="Email" class="form-control form-control-sm">
+                                <small class="form-text text-muted">This is Optional. If this field is blank the file will
+                                    be emailed to your email address</small>
+                            </div>
+                        </div>
+                        @* <div class="row d-flex align-items-center justify-content-center">
+
+                            <div class="col-md-8 col-sm-12">
+                            </div>
+                            </div> *@
+                        <div class="d-flex justify-content-end">
+                            <a asp-action="Index" asp-controller="Export" class="btn btn-secondary text-white shadow-3">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn shadow-3 btn-info mx-0">
+                                Next
+                            </button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+<script src="/lib/select2/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+}

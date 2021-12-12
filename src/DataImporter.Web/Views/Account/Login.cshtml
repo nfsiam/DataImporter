@@ -1,0 +1,75 @@
+﻿@model DataImporter.Web.Models.Account.LoginModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="auth-bg">
+            <span class="r"></span>
+            <span class="r s"></span>
+            <span class="r s"></span>
+            <span class="r"></span>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="feather icon-unlock auth-icon"></i>
+                </div>
+                <h3 class="mb-4">Login</h3>
+                @if (ViewBag.EmailConfirmation != null)
+                {
+                    <form style="display: none" id="resend-form" method="post" asp-controller="Account" asp-action="ResendEmailConfirmation" asp-antiforgery="true">
+                        <input asp-for="Email" />
+                        <input asp-for="ReturnUrl" />
+                    </form>
+                    <div class="alert alert-warning" role="alert">
+                        @ViewBag.EmailConfirmation
+                        <p class="mb-0 text-muted">
+                            Didn't get the email? <a href="javascript:$('#resend-form').submit()">Resend</a>
+                        </p>
+                    </div>
+                }
+                else if (ViewBag.EmailConfirmSuccess != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @ViewBag.EmailConfirmSuccess
+                    </div>
+                }
+                else if (ViewBag.EmailConfirmError != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @ViewBag.EmailConfirmError
+                    </div>
+                }
+            <form id="account" method="post" asp-controller="Account" asp-action="Login" asp-antiforgery="true" asp-route-returnUrl="@Model.ReturnUrl">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div asp-validation-summary="All" class="alert alert-danger text-left" role="alert"></div>
+                }
+                <div class="form-group mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <input asp-for="Password" class="form-control" placeholder="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group text-left">
+                    <div class="checkbox checkbox-fill d-inline">
+                        <input asp-for="RememberMe" />
+                        <label asp-for="RememberMe" class="cr"></label>
+                    </div>
+                </div>
+                <button class="btn btn-primary shadow-2 mb-4">Login</button>
+            </form>
+                <p class="mb-0 text-muted">Don’t have an account? <a asp-action="Register" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

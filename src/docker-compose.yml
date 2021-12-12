@@ -1,0 +1,70 @@
+version: '3.4'
+services:
+    web:
+        build: 
+            context: . 
+            dockerfile: DataImporter.Web/Dockerfile
+        env_file: 
+            - common.env
+            - web.env
+        volumes:
+            - web-log-volume:/app/Logs
+            - storage-volume:/Storage
+        ports:
+            - "80:80"
+        depends_on:
+            - db
+    emailworker:
+        build: 
+            context: .
+            dockerfile: Workers/DataImporter.EmailWorker/Dockerfile
+        env_file: 
+            - common.env
+            - worker.env
+        depends_on: 
+            - db 
+        volumes:
+            - emailworker-log-volume:/app/Logs
+            - storage-volume:/Storage
+    exportprocessingworker:
+        build: 
+            context: .
+            dockerfile: Workers/DataImporter.ExportProcessingWorker/Dockerfile
+        env_file: 
+            - common.env
+            - worker.env
+        depends_on: 
+            - db 
+        volumes:
+            - exportprocessingworker-log-volume:/app/Logs
+            - storage-volume:/Storage
+    importprocessingworker:
+        build: 
+            context: .
+            dockerfile: Workers/DataImporter.ImportProcessingWorker/Dockerfile
+        env_file: 
+            - common.env
+            - worker.env
+        depends_on: 
+            - db 
+        volumes:
+            - importprocessingworker-log-volume:/app/Logs
+            - storage-volume:/Storage
+    db:
+        image: "mcr.microsoft.com/mssql/server"
+        env_file: 
+            - db.env
+        ports:
+            - "14330:1433"
+volumes:
+    web-log-volume:
+        external: true
+    storage-volume:
+        external: true
+    emailworker-log-volume:
+        external: true
+    exportprocessingworker-log-volume:
+        external: true
+    importprocessingworker-log-volume:
+        external: true
+        

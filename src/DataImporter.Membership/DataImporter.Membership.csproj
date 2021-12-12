@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="BusinessObjects\ApplicationUser.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+    </Compile>
+    <Compile Update="Entities\ApplicationUser.cs">
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Update="Extensions\ClaimsPrincipalExtensions.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+    </Compile>
+    <Compile Update="Extensions\IdentityClaimsExtensions.cs">
+      <ExcludeFromSourceAnalysis>True</ExcludeFromSourceAnalysis>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+
+</Project>

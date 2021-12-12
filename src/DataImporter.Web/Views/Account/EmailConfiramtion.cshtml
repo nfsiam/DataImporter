@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Email Confirmation";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="auth-bg">
+            <span class="r"></span>
+            <span class="r s"></span>
+            <span class="r s"></span>
+            <span class="r"></span>
+        </div>
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="mb-4">
+                    DataImport
+                </div>
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Success!</h4>
+                    <p>Confirmation Email Sent to @ViewBag.Email</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

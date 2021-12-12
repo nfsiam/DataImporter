@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DataImporter.Membership.Extensions
+@inject SignInManager<DataImporter.Membership.Entities.ApplicationUser> SignInManager
+@*@inject UserManager<DataImporter.Membership.Entities.ApplicationUser> UserManager*@
+
+
+<header class="navbar pcoded-header navbar-expand-lg navbar-light shadow-sm">
+    <div class="m-header">
+        <a class="mobile-menu" id="mobile-collapse1" href="javascript:"><span></span></a>
+        <a href="index.html" class="b-brand">
+            <div class="b-bg">
+                <i class="feather icon-trending-up"></i>
+            </div>
+            <span class="b-title">DataImporter</span>
+        </a>
+    </div>
+    <a class="mobile-menu" id="mobile-header" href="javascript:">
+        <i class="feather icon-more-horizontal"></i>
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li><a href="javascript:" class="full-screen" onclick="javascript:toggleFullScreen()"><i class="feather icon-maximize"></i></a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li>
+                <div class="dropdown drp-user">
+                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="feather icon-user"></i>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @User.Identity.GetDisplayName()
+                        }
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-notification">
+                        <ul class="pro-body">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <form id ="logout-form" class="" asp-controller="Account" asp-action="Logout" asp-antiforgery="true" asp-route-returnUrl="@Url.Action("Login", "Account")">
+                                    <li>
+                                        <a href="javascript:$('#logout-form').submit()" class="dropdown-item"><i class="feather icon-log-out"></i> Logout</a>
+                                    </li>
+                                </form>
+                            }
+                            else
+                            {
+                                <li><a href="/Account/Login" class="dropdown-item"><i class="feather icon-log-in"></i> Login</a></li>
+                                <li><a href="/Account/Register" class="dropdown-item"><i class="feather icon-user-plus"></i> Register</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>

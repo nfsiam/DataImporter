@@ -1,0 +1,89 @@
+﻿@model DataImporter.Web.Models.Dashboard.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="row">
+    <div class="col-md-12">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div asp-validation-summary="All" class="alert alert-danger text-left" role="alert"></div>
+        }
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card theme-bg pb-0">
+            <div class="card-block pb-3">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col">
+                        <i class="fas fa-file-excel f-60 text-white"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h3 class="text-white f-w-700 text-right">@Model.ImportCount</h3>
+                        <h5 class="text-white text-right">Files Imported</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card theme-bg2 pb-0">
+            <div class="card-block pb-3">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col">
+                        <i class="fas fa-address-book f-60 text-white"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h3 class="text-white f-w-700 text-right">@Model.ContactCount</h3>
+                        <h5 class="text-white text-right">Contacts</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card theme-bg pb-0">
+            <div class="card-block pb-3">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col">
+                        <i class="feather icon-check-square f-60 text-white"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h3 class="text-white f-w-700 text-right">@Model.ExportCount</h3>
+                        <h5 class="text-white text-right">Export Jobs</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-xl-6">
+        <div class="card card-customer">
+            <div class="card-block">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col">
+                        <h3 class="mb-2 f-w-300">@Model.GroupCount</h3>
+                        <h5 class="mb-3">Groups</h5>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-friends f-30 text-white theme-bg2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-xl-6">
+        <div class="card card-customer">
+            <div class="card-block">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col">
+                        <h5 class="mb-3">Emails Sent</h5>
+                        <h3 class="mb-2 f-w-300">@Model.EmailCount</h3>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-envelope f-30 text-white theme-bg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

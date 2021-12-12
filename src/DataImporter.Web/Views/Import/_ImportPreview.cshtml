@@ -1,0 +1,91 @@
+﻿@model DataImporter.Web.Models.Import.PreviewTaskModel
+@{
+    Layout = null;
+}
+
+
+<div class="col-md-12">
+    <div class="card pb-0 pt-2">
+        <div class="spin-div overlay"></div>
+        <div class="card-body pb-3">
+            <!--Stepper-->
+            <div class="bs-stepper mb-5">
+                <div class="bs-stepper-header" role="tablist">
+                    <div class="step" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">Upload File</span>
+                    </div>
+                    <div class="bs-stepper-line"></div>
+                    <div class="step active" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">Preview File</span>
+                    </div>
+                    <div class="bs-stepper-line"></div>
+                    <div class="step" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">3</span>
+                        <span class="bs-stepper-label">Conclusion</span>
+                    </div>
+                </div>
+            </div>
+            <!--Stepper-->
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-md-8">
+                    <div asp-validation-summary="All"
+                         class="alert alert-danger text-left pb-0 validation-block"
+                         role="alert">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row d-flex justify-content-between mb-4 flex-wrap">
+                        <div class="col-md-6">
+                            Import Preview of <b class="text-info">@Model.DisplayFileName</b>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row text-md-right">
+                                <div class="col-md-12">
+                                    @Model.TotalRows total rows that has data
+                                </div>
+                                <div class="col-md-12">
+                                    @Model.TotalCells total cells that has data
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 table-responsive">
+                    <table id="imports" class="table table-sm table-bordered">
+                        <thead>
+                        <tr>
+                            @foreach (var i in Model.HeadersRow)
+                            {
+                                <th>@i</th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.DataRows)
+                        {
+                            <tr>
+                                @foreach (var i in item)
+                                {
+                                    <td>@i</td>
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary btn-lg shadow-3" id="cancel-task-btn" data-import-id="@Model.Id">
+                    Cancel Import
+                </button>
+                <button class="btn btn-lg shadow-3 btn-info mx-0" id="confirm-task-btn" data-import-id="@Model.Id">
+                    Looks Good, Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

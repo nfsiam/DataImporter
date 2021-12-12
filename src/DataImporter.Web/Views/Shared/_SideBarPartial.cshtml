@@ -1,0 +1,64 @@
+﻿<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="/" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">DataImporter</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Dashboard" class="nav-link top-nav-link"><span
+                            class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Dashboard</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Group</label>
+                </li>
+                <li class="">
+                    <a asp-action="Index" asp-controller="Group" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-folder-open"></i></span><span class="pcoded-mtext">View All
+                            Groups</span></a>
+                </li>
+                <li class="">
+                    <a asp-action="Create" asp-controller="Group" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-pencil-alt"></i></span><span class="pcoded-mtext">Create Group</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Contacts</label>
+                </li>
+                <li class="">
+                    <a asp-action="Index" asp-controller="Contact" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-address-book"></i></span><span class="pcoded-mtext">View
+                            Contacts</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Import</label>
+                </li>
+                <li class="">
+                    <a asp-action="Index" asp-controller="Import" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-tasks"></i></span><span class="pcoded-mtext">Import History</span></a>
+                </li>
+                <li class="">
+                    <a asp-action="NewTask" asp-controller="Import" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-download"></i></span><span class="pcoded-mtext">Import Now</span></a>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Export</label>
+                </li>
+                <li class="">
+                    <a asp-action="Index" asp-controller="Export" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-tasks"></i></span><span class="pcoded-mtext">Export History</span></a>
+                </li>
+                <li class="">
+                    <a asp-action="NewTask" asp-controller="Export" class="nav-link "><span class="pcoded-micon"><i
+                                class="fas fa-file-export"></i></span><span class="pcoded-mtext">Export Now</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,54 @@
+﻿@model DataImporter.Web.Models.Import.FinalizeTaskModel
+@{
+    Layout = null;
+}
+
+<div class="col-md-12">
+    <div class="card pb-0 pt-2">
+        <div class="spin-div overlay"></div>
+        <div class="card-body pb-5">
+            <!--Stepper-->
+            <div class="bs-stepper mb-5">
+                <div class="bs-stepper-header" role="tablist">
+                    <div class="step" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">Upload File</span>
+                    </div>
+                    <div class="bs-stepper-line"></div>
+                    <div class="step" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">Preview File</span>
+                    </div>
+                    <div class="bs-stepper-line"></div>
+                    <div class="step active" data-target="#test-l-1">
+                        <span class="bs-stepper-circle">3</span>
+                        <span class="bs-stepper-label">Conclusion</span>
+                    </div>
+                </div>
+            </div>
+            <!--Stepper-->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="alert alert-danger text-left" role="alert"></div>
+            }
+            else if (Model.Decision == "confirm")
+            {
+                <div class="theme-bg2 text-center py-5 rounded">
+                    <h3 class="text-white">Task has been confirmed!</h3>
+                    <a asp-action="Index" asp-controller="Import" class="text-white">
+                        View Status
+                    </a>
+                </div>
+            }
+            else if (Model.Decision == "cancel")
+            {
+                <div class="theme-bg2 text-center py-5 rounded">
+                    <h3 class="text-white">Task has been Cancelled!</h3>
+                    <a asp-action="NewTask" asp-controller="Import" class="text-white">
+                        Create a New Task?
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

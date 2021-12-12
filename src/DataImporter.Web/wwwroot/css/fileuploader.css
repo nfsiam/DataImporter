@@ -1,0 +1,39 @@
+#choose {
+    display: none;
+}
+
+.inner-drag-zone {
+    padding: 25px !important;
+}
+
+.dashed-nofocus {
+    border: 3px dashed #d2d2d2;
+}
+
+.dashed-focus {
+    border: 3px dashed #fff;
+}
+
+.text-nofocus {
+    color: grey;
+}
+
+.text-focus {
+    color: white;
+}
+
+.mouse-pointer {
+    cursor: pointer;
+}
+
+.drag-zone {
+    transition: 1s linear;
+}
+
+.validation-block {
+    display: none;
+}
+
+.visible {
+    display: block !important;
+}

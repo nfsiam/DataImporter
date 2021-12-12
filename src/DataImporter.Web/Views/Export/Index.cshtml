@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "All Exports";
+}
+
+@section Styles
+{
+<link rel="stylesheet" href="/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="/lib/daterangepicker/daterangepicker.min.css">
+}
+@section Scripts
+{
+<!-- Datepicker Js -->
+<script src="/lib/daterangepicker/moment.min.js"></script>
+<script src="/lib/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="/template/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/template/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/template/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+<script src="/js/dtable-filter.js"></script>
+<script>
+    const getBadge = (data, type, row) => {
+        let classes;
+        switch (data) {
+            case "Done":
+                classes = 'theme-bg text-white';
+                break;
+            case "Processing":
+                classes = 'theme-bg2 text-white';
+                break;
+            case "Queued":
+                classes = 'bg-light';
+                break;
+            case "Error":
+                classes = 'bg-warning';
+                break;
+            default:
+                classes = 'bg-light';
+        }
+        return `<div class="d-flex justify-content-center"><span class="label rounded f-12 px-4 py-1 ${classes}">${data
+            }</span></div>`;
+    }
+    const getButton = (data, type, row) => {
+        const { id, status } = data;
+        if (status != null && status == 'Done') {
+            return `<div class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-icon btn-light shadow-1 btn-sm mr-0 mb-0" onclick="window.location.href = '/export/download/${id}'" value='${id}'
+                                            data-toggle="tooltip" data-placement="top" title="download a copy">
+                                            <i class="fas fa-download text-info"></i>
+                                        </button></div>`;
+        }
+        return '';
+    }
+
+    let dTable = $('#exports-table').DataTable({
+        ...dTableCommonConfig,
+        order: [[3, "desc"]],
+        dom: "<'row'<'col-md-6'l><'col-md-6'p>><r><t><'row'<'col-md-6'i><'col-md-6'p>>",
+        ajax: {
+            url: "/Export/GetExportData",
+            method: "POST",
+            data: (d) => {
+                d.fStartDate = fStartDate;
+                d.fEndDate = fEndDate;
+            }
+        },
+        columns: [
+            { "data": "displayFileName" },
+            { "data": "groupNames" },
+            { "data": "email" },
+            { "data": "createdAt" },
+            { "data": "status" },
+            { "data": "action" }
+        ],
+        columnDefs:
+            [
+                {
+                    targets: 4,
+                    render: getBadge
+                },
+                {
+                    targets: 1,
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    orderable: false,
+                    render: getButton
+                }
+            ]
+    });
+</script>
+}
+
+<div class="row mb-0 d-flex justify-content-between h-100 align-items-center">
+    <div class="col-sm-6">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right px-0">
+            <li class="breadcrumb-item">
+                <a href="/">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">View All Exports</li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row mb-0">
+    <div class="col-12">
+        <div class="card">
+            <div class="d-flex card-body justify-content-between align-items-end flex-wrap border-bottom pt-3 pb-3">
+                <div class="col-md-9 px-0">
+                    <div class="row px-0 d-flex align-items-end">
+                        <partial name="_DateFilterPartial" />
+                    </div>
+                </div>
+                <partial name="_SearchInputDataTablesPartial" />
+            </div>
+            <div class="card-body">
+                <table id="exports-table" class="table table-sm ">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Group Names</th>
+                            <th>Email</th>
+                            <th>Date</th>
+                            <th style="width: 120px" class="text-center">Status</th>
+                            <th style="width: 120px" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                </table>
+                <partial name="_DeletePopupPartial" />
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
